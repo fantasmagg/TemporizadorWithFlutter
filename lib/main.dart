@@ -1,45 +1,81 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MaterialApp(home: Temporizador()));
+void main(){
+  runApp(const MaterialApp(home: TemporizadorScreen()));
 }
 
 
-class Temporizador extends StatefulWidget {
-  const Temporizador({super.key});
+class TemporizadorScreen extends StatefulWidget {
+  const TemporizadorScreen({super.key});
 
   @override
-  State<Temporizador>createState() => _TemporizadorState();
+  State<TemporizadorScreen> createState() => _TemporizadorScreenState();
 }
 
-class _TemporizadorState extends State<Temporizador>{
-
+class _TemporizadorScreenState extends State<TemporizadorScreen> {
   int segundos = 60;
 
+  Timer? temporizador;
+
+  void iniciar() {
+    temporizador = Timer.periodic(const Duration(seconds: 1), (t) {
+      setState(() {
+        segundos = segundos - 1;
+      });
+    });
+  }
+
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('$segundos'),
-            ElevatedButton(
-              onPressed: restar,
-              child: Text('Restar')
-            )
+            VistaNumero(segundos: segundos),
+            const SizedBox(height: 40),
+            BotonesCOntrol(alIniciar: iniciar)
           ]
-        ),
-      ),
+        )
+      )
+    );
+  }
+}
+
+class VistaNumero extends StatelessWidget {
+
+  final int segundos;
+
+  const VistaNumero({super.key, required this.segundos});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      '$segundos',
+      style: const TextStyle(fontSize: 48),
     );
   }
 
-
-  void restar() {
-  setState(() {
-    segundos = segundos - 1;
-  });
 }
 
-}
 
+class BotonesCOntrol extends StatelessWidget {
+  final VoidCallback alIniciar;
+
+  const BotonesCOntrol({super.key, required this.alIniciar});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ElevatedButton(
+          onPressed: alIniciar,
+          child: const Text('Iniciar'),
+        )
+      ]
+    );
+  }
+
+}
