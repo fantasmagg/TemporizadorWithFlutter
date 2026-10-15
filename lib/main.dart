@@ -19,13 +19,14 @@ class _TemporizadorScreenState extends State<TemporizadorScreen> {
   Timer? temporizador;
 
   void iniciar() {
-
+    debugPrint("start:: iniciar ");
     if (temporizador != null) return;
 
     temporizador = Timer.periodic(const Duration(seconds: 1), (t) {
       
       if (segundos == 0) {
         detener();
+        debugPrint("final:: iniciar ");
         return;
       }
 
@@ -33,19 +34,24 @@ class _TemporizadorScreenState extends State<TemporizadorScreen> {
         segundos = segundos - 1;
       });
     });
+    debugPrint("final:: iniciar ");
   }
 
   void detener () {
+    debugPrint("start:: detener");
     temporizador?.cancel();
     temporizador = null;
     setState(() {});
+    debugPrint("final:: detener");
   }
 
   void reiniciar() {
+    debugPrint("start:: reiniciar");
     detener();
     setState(() {
       segundos = 1500;
     });
+     debugPrint("final:: reiniciar");
   }
 
   @override
@@ -113,19 +119,25 @@ class BotonesCOntrol extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        ElevatedButton(
-          onPressed: alIniciar,
-          child: const Text('Iniciar'),
-        ),
-        const SizedBox(width: 10),
-        ElevatedButton(
+    
+        FloatingActionButton(
+          heroTag: 'reiniciar',
           onPressed: alReiniciar,
-          child: const Text('Reiniciar')
+          child: Icon(Icons.replay)
+        )
+        ,
+        const SizedBox(width: 10)
+        ,
+        FloatingActionButton.large(
+          heroTag: 'iniciar',
+          onPressed: alIniciar,
+          child: Icon(Icons.play_arrow)
         ),
         const SizedBox(width: 10),
-        ElevatedButton(
+        FloatingActionButton(
+          heroTag: 'add',
           onPressed: alDetener,
-          child: const Text('Detener')
+          child: Icon(Icons.add)
         )
       ]
     );
