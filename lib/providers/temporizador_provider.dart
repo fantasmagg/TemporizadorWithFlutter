@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TemporizadorProvider extends ChangeNotifier {
 
     static const int segundosIniciales = 1500;
+    int completados = 0;
 
     int segundos = segundosIniciales;
     Timer? _temporizador;
@@ -15,6 +16,8 @@ class TemporizadorProvider extends ChangeNotifier {
 
         _temporizador = Timer.periodic(const Duration(seconds: 1), (t) {
             if (segundos == 0) {
+                completados = completados + 1;
+                _guardarCompletados();
                 detener();
                 return;
             }
@@ -40,6 +43,17 @@ class TemporizadorProvider extends ChangeNotifier {
         segundos = segundosIniciales;
         notifyListeners();
         debugPrint("final:: reiniciar");
+    }
+
+    Future<void> cargarCompletados()async {
+        final prefs = await SharedPreferences.getInstance();
+        completados = prefs.getInt('completados') ?? 0;
+        notifyListeners();
+    }
+
+    Future<void> _guardarCompletados() async {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setInt('completados', completados);
     }
 
     @override
