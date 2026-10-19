@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../providers/temporizador_provider.dart';
 import '../widgets/vista_numero.dart';
 import '../widgets/botones_control.dart';
+import 'historial_screent.dart';
 
 class TemporizadorScreen extends StatefulWidget{
 
@@ -47,6 +48,18 @@ class _TemporizadorScreenState extends State<TemporizadorScreen> {
                   alIniciar: provider.iniciar,
                   alDetener: provider.detener,
                   alReiniciar: provider.reiniciar,
+                ),
+                TextButton(
+                  onPressed: () async {
+                    final resultado = await
+                    Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => HistorialScreen(completados: provider.completados)),
+                    );
+                    if(resultado != null){
+                      debugPrint('volvi con: $resultado');
+                    }
+                  },
+                  child: const Text('ver historial'),
                 ),
               ],
             ),
